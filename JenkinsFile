@@ -32,7 +32,7 @@ pipeline {
             steps {
                 echo 'Running Pytest from virtual environment...'
                 // 4. Run pytest directly from the venv's bin directory
-                sh './venv/bin/pytest test_solution.py --junitxml=test-reports/results.xml'
+                sh './venv/bin/pytest test_Solution.py --junitxml=test-reports/results.xml'
             }
         }
     }
