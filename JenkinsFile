@@ -15,15 +15,15 @@ pipeline {
         stage('Install Dependencies') {
             steps {
                 echo 'Installing requirements...'
-                bat 'python -m pip install --upgrade pip'
-                bat 'python -m pip install -r requirements.txt'
+                sh 'python -m pip install --upgrade pip'
+                sh 'python -m pip install -r requirements.txt'
             }
         }
 
         stage('Execute Tests') {
             steps {
                 echo 'Running native Python Pytest suite...'
-                bat 'python -m pytest test_solution.py --junitxml=test-reports/results.xml'
+                sh 'pytest test_solution.py --junitxml=test-reports/results.xml'
             }
         }
     }
