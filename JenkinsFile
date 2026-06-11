@@ -1,5 +1,5 @@
 pipeline {
-    agent any // Runs on your Windows agent
+    agent any
 
     environment {
         PYTHONUNBUFFERED = '1'
@@ -14,20 +14,25 @@ pipeline {
 
         stage('Install Dependencies') {
             steps {
-                echo 'Installing requirements...'
-                // sh 'python -m pip install --upgrade pip'
-                sh 'pip3 install -r requirements.txt'
-
+                echo 'Creating Python Virtual Environment...'
+                // 1. Create a fresh virtual environment named 'venv'
+                sh 'python3 -m venv venv'
+                
+                echo 'Installing requirements inside venv...'
+                // 2. Use the local pip inside the venv to install requirements safely
+                sh './venv/bin/pip install -r requirements.txt'
+                
                 echo 'Verifying installed packages...'
-                // This will print the list of installed Python modules to the console log
-                sh 'pip3 list'
+                // 3. Check the packages inside the venv
+                sh './venv/bin/pip list'
             }
         }
 
         stage('Execute Tests') {
             steps {
-                echo 'Running native Python Pytest suite...'
-                sh 'pytest test_solution.py --junitxml=test-reports/results.xml'
+                echo 'Running Pytest from virtual environment...'
+                // 4. Run pytest directly from the venv's bin directory
+                sh './venv/bin/pytest test_solution.py --junitxml=test-reports/results.xml'
             }
         }
     }
