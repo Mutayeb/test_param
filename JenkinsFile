@@ -1,5 +1,5 @@
 pipeline {
-    agent any // Make sure this runs on your Windows node/agent
+    agent any // Runs on your Windows agent
 
     environment {
         PYTHONUNBUFFERED = '1'
@@ -14,8 +14,7 @@ pipeline {
 
         stage('Install Dependencies') {
             steps {
-                echo 'Installing dependencies from requirements.txt...'
-                // Using 'bat' for Windows, and 'python -m pip' to avoid PATH quirks
+                echo 'Installing requirements...'
                 bat 'python -m pip install --upgrade pip'
                 bat 'python -m pip install -r requirements.txt'
             }
@@ -23,7 +22,7 @@ pipeline {
 
         stage('Execute Tests') {
             steps {
-                echo 'Running Pytest against C++ executable on Windows...'
+                echo 'Running native Python Pytest suite...'
                 bat 'python -m pytest test_solution.py --junitxml=test-reports/results.xml'
             }
         }
@@ -31,7 +30,7 @@ pipeline {
 
     post {
         always {
-            echo 'Processing test results...'
+            echo 'Publishing test results to Jenkins UI...'
             junit 'test-reports/results.xml'
         }
     }
